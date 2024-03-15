@@ -1,31 +1,37 @@
-const gulp = require("gulp");
+const gulp = require('gulp');
+const replace = require('gulp-replace');
 
 // HTML
-const fileInclude = require("gulp-file-include");
-const htmlclean = require("gulp-htmlclean");
-const webpHTML = require("gulp-webp-html");
+const fileInclude = require('gulp-file-include');
+const htmlclean = require('gulp-htmlclean');
+const webpHTML = require('gulp-webp-retina-html');
+const typograf = require('gulp-typograf');
 
 // SASS
-const sass = require("gulp-sass")(require("sass"));
-const sassGlob = require("gulp-sass-glob");
-const autoprefixer = require("gulp-autoprefixer");
-const csso = require("gulp-csso");
-const webpCss = require("gulp-webp-css");
+const sass = require('gulp-sass')(require('sass'));
+const sassGlob = require('gulp-sass-glob');
+const autoprefixer = require('gulp-autoprefixer');
+const csso = require('gulp-csso');
+// const webImagesCSS = require('gulp-web-images-css');  //Вывод WEBP-изображений
 
-const server = require("gulp-server-livereload");
-const clean = require("gulp-clean");
-const fs = require("fs");
-const sourceMaps = require("gulp-sourcemaps");
-const groupMedia = require("gulp-group-css-media-queries");
-const plumber = require("gulp-plumber");
-const notify = require("gulp-notify");
-const webpack = require("webpack-stream");
-const babel = require("gulp-babel");
-const changed = require("gulp-changed");
+const server = require('gulp-server-livereload');
+const clean = require('gulp-clean');
+const fs = require('fs');
+const sourceMaps = require('gulp-sourcemaps');
+const groupMedia = require('gulp-group-css-media-queries');
+const plumber = require('gulp-plumber');
+const notify = require('gulp-notify');
+const webpack = require('webpack-stream');
+const babel = require('gulp-babel');
+const changed = require('gulp-changed');
 
 // Images
-const imagemin = require("gulp-imagemin");
-const webp = require("gulp-webp");
+const imagemin = require('gulp-imagemin');
+const imageminWebp = require('imagemin-webp');
+const extReplace = require('gulp-ext-replace');
+
+// SVG
+const svgsprite = require('gulp-svg-sprite');
 
 gulp.task("clean:docs", function (done) {
   if (fs.existsSync("./docs/")) {
