@@ -35,5 +35,10 @@
 	},
 	"browserslist": [
 		"last 5 versions"
-	]
+	],
+	"dependencies": {
+		"gulp-replace": "^1.1.4",
+		"gulp-svg-sprite": "^2.0.3",
+		"gulp-webp-retina-html": "^1.2.0"
+	}
 }

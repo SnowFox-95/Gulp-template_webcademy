@@ -5,7 +5,7 @@ const replace = require('gulp-replace');
 const fileInclude = require('gulp-file-include');
 const htmlclean = require('gulp-htmlclean');
 const webpHTML = require('gulp-webp-retina-html');
-const typograf = require('gulp-typograf');
+//const typograf = require('gulp-typograf');
 
 // SASS
 const sass = require('gulp-sass')(require('sass'));
@@ -28,7 +28,7 @@ const changed = require('gulp-changed');
 // Images
 const imagemin = require('gulp-imagemin');
 const imageminWebp = require('imagemin-webp');
-const extReplace = require('gulp-ext-replace');
+//const extReplace = require('gulp-ext-replace');
 
 // SVG
 const svgsprite = require('gulp-svg-sprite');
