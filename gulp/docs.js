@@ -114,14 +114,78 @@ gulp.task("sass:docs", function () {
 
 gulp.task("images:docs", function () {
   return gulp
-    .src("./src/img/**/*")
+    .src(["./src/img/**/*", "!./src/img/svgicons/**/*"])
     .pipe(changed("./docs/img/"))
-    .pipe(webp())
+    .pipe(
+      imagemin([
+        imageminWebp({
+          quality: 85,
+        }),
+      ])
+    )
+    .pipe(extReplace(".webp"))
     .pipe(gulp.dest("./docs/img/"))
     .pipe(gulp.src("./src/img/**/*"))
     .pipe(changed("./docs/img/"))
-    .pipe(imagemin({ verbose: true }))
+    .pipe(
+      imagemin(
+        [
+          imagemin.gifsicle({ interlaced: true }),
+          imagemin.mozjpeg({ quality: 85, progressive: true }),
+          imagemin.optipng({ optimizationLevel: 5 }),
+        ],
+        { verbose: true }
+      )
+    )
     .pipe(gulp.dest("./docs/img/"));
+});
+
+const svgStack = {
+  mode: {
+    stack: {
+      example: true,
+    },
+  },
+};
+
+const svgSymbol = {
+  mode: {
+    symbol: {
+      sprite: "../sprite.symbol.svg",
+    },
+  },
+  shape: {
+    transform: [
+      {
+        svgo: {
+          plugins: [
+            {
+              name: "removeAttrs",
+              params: {
+                attrs: "(fill|stroke)",
+              },
+            },
+          ],
+        },
+      },
+    ],
+  },
+};
+
+gulp.task("svgStack:docs", function () {
+  return gulp
+    .src("./src/img/svgicons/**/*.svg")
+    .pipe(plumber(plumberNotify("SVG:dev")))
+    .pipe(svgsprite(svgStack))
+    .pipe(gulp.dest("./docs/img/svgsprite/"));
+});
+
+gulp.task("svgSymbol:docs", function () {
+  return gulp
+    .src("./src/img/svgicons/**/*.svg")
+    .pipe(plumber(plumberNotify("SVG:dev")))
+    .pipe(svgsprite(svgSymbol))
+    .pipe(gulp.dest("./docs/img/svgsprite/"));
 });
 
 gulp.task("fonts:docs", function () {
