@@ -1,7 +1,8 @@
-Команда для установки всех пакетов:
+# Команда для установки всех пакетов:
+
 npm i gulp gulp-sass sass gulp-file-include gulp-clean gulp-server-livereload gulp-sourcemaps gulp-plumber gulp-notify gulp-group-css-media-queries --save-dev
 
-Описание пакетов:
+### Описание пакетов:
 gulp - собственно Gulp
 gulp-sass - Сборка SASS / SCSS
 sass - Необходим для сборки SASS / SCSS
@@ -15,9 +16,10 @@ gulp-group-css-media-queries - Группировка CSS медиа запро�
 
 ----------------------------------------------------------------------
 
-Сборка скриптов. webpack, babel
+## Сборка скриптов. webpack, babel
 
-Установка babel:
+### Установка babel:
+
 npm i gulp-babel @babel/core @babel/preset-env
 
 - JS таск
@@ -25,7 +27,8 @@ npm i gulp-babel @babel/core @babel/preset-env
 
 ----------------------------------------------------------------------
 
-Установка webpack:
+### Установка webpack:
+
 npm i webpack-stream style-loader css-loader --save-dev
 
 - JS таск
@@ -33,6 +36,7 @@ npm i webpack-stream style-loader css-loader --save-dev
 - пример файлов с модулями
 
 Пример с datepicker:
+
 npm i air-datepicker -S
 
 
@@ -49,7 +53,8 @@ HTML:
 
 ----------------------------------------------------------------------
 
-Картинки:
+## Картинки:
+
 npm i gulp-imagemin@7 --save-dev
 
 .pipe(imagemin({ verbose: true }))
@@ -57,7 +62,7 @@ npm i gulp-imagemin@7 --save-dev
 
 ----------------------------------------------------------------------
 
-Ускорение сборки
+## Ускорение сборки
 
 npm install --save-dev gulp-changed
 
@@ -67,6 +72,17 @@ npm install --save-dev gulp-changed
 ----------------------------------------------------------------------
 
 
-web-p
+## web-p
 
 npm i gulp-webp gulp-webp-html gulp-webp-css --save-dev
+
+
+------------------------------------------------------------------------
+
+
+## Автоматический деплой
+
+При пуше в ветку `main`:
+- выполняется сборка (режим production),
+- папка `./public` заливается в ветку `gh-pages`,
+- сайт автоматически публикуется на GitHub Pages.
