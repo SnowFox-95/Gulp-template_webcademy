@@ -1,20 +1,23 @@
-const gulp = require('gulp');
-const fileInclude = require('gulp-file-include');
-const sass = require('gulp-sass')(require('sass'));
-const sassGlob = require('gulp-sass-glob');
-const server = require('gulp-server-livereload');
-const clean = require('gulp-clean');
-const fs = require('fs');
-const sourceMaps = require('gulp-sourcemaps');
-const plumber = require('gulp-plumber');
-const notify = require('gulp-notify');
-const webpack = require('webpack-stream');
-const babel = require('gulp-babel');
-const imagemin = require('gulp-imagemin');
-const changed = require('gulp-changed');
+const gulp = require("gulp");
+const fileInclude = require("gulp-file-include");
+const sass = require("gulp-sass")(require("sass"));
+const sassGlob = require("gulp-sass-glob");
+const server = require("gulp-server-livereload");
+const clean = require("gulp-clean");
+const fs = require("fs");
+const sourceMaps = require("gulp-sourcemaps");
+const plumber = require("gulp-plumber");
+const notify = require("gulp-notify");
+const webpack = require("webpack-stream");
+const babel = require("gulp-babel");
+const imagemin = require("gulp-imagemin");
+const changed = require("gulp-changed");
 //const typograf = require('gulp-typograf');
-const svgsprite = require('gulp-svg-sprite');
-const replace = require('gulp-replace');
+const svgsprite = require("gulp-svg-sprite");
+const replace = require("gulp-replace");
+const webImagesCSS = require('gulp-web-images-css');
+const csso = require("gulp-csso");
+const rename = require('gulp-rename'); 
 
 gulp.task("clean:dev", function (done) {
   if (fs.existsSync("./build/")) {
@@ -39,18 +42,19 @@ const plumberNotify = (title) => {
 };
 
 gulp.task("html:dev", function () {
-  return gulp
-    .src(["./src/html/**/*.html", "!./src/html/blocks/*.html"])
-    .pipe(changed("./build", { hasChanged: changed.compareContents }))
-    .pipe(plumber(plumberNotify("HTML")))
-    .pipe(fileInclude(fileIncludeSetting))
-    .pipe(
-      replace(
-        /(?<=src=|href=|srcset=)(['"])(\.(\.)?\/)*(img|images|fonts|css|scss|sass|js|files|audio|video)(\/[^\/'"]+(\/))?([^'"]*)\1/gi,
-        "$1./$4$5$7$1"
+  return (
+    gulp
+      .src(["./src/html/**/*.html", "!./src/html/blocks/*.html"])
+      .pipe(changed("./build", { hasChanged: changed.compareContents }))
+      .pipe(plumber(plumberNotify("HTML")))
+      .pipe(fileInclude(fileIncludeSetting))
+      .pipe(
+        replace(
+          /(?<=src=|href=|srcset=)(['"])(\.(\.)?\/)*(img|images|fonts|css|scss|sass|js|files|audio|video)(\/[^\/'"]+(\/))?([^'"]*)\1/gi,
+          "$1./$4$5$7$1"
+        )
       )
-    )
-    /*.pipe(
+      /*.pipe(
       typograf({
         locale: ["ru", "en-US"],
         htmlEntity: { type: "digit" },
@@ -60,7 +64,8 @@ gulp.task("html:dev", function () {
         ],
       })
     )*/
-    .pipe(gulp.dest("./bulid"));
+      .pipe(gulp.dest("./build"))
+  );
 });
 
 gulp.task("sass:dev", function () {
@@ -72,12 +77,21 @@ gulp.task("sass:dev", function () {
     .pipe(sassGlob())
     .pipe(sass())
     .pipe(
+      webImagesCSS({
+        mode: "webp",
+        base: "../img/",
+      })
+    )
+    .pipe(
       replace(
         /(['"]?)(\.\.\/)+(img|images|fonts|css|scss|sass|js|files|audio|video)(\/[^\/'"]+(\/))?([^'"]*)\1/gi,
         "$1$2$3$4$6$1"
       )
     )
-    .pipe(sourceMaps.write())
+    .pipe(gulp.dest("./build/css/"))
+    .pipe(csso())
+    .pipe(rename({ suffix: ".min" }))
+    .pipe(sourceMaps.write("."))
     .pipe(gulp.dest("./build/css/"));
 });
 
@@ -170,7 +184,7 @@ gulp.task("js:dev", function () {
       .pipe(changed("./build/js/"))
       .pipe(plumber(plumberNotify("JS")))
       // .pipe(babel())
-      .pipe(webpack(require("./../webpack.config.js")))
+      .pipe(webpack(require("../webpack.config.js")))
       .pipe(gulp.dest("./build/js/"))
   );
 });

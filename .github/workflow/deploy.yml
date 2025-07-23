@@ -1,21 +1,21 @@
-name: Deploy Gulp site to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main  
+      - main
 
 jobs:
-  deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout main branch
         uses: actions/checkout@v4
         with:
-          persist-credentials: true
+          fetch-depth: 0  # обязательно для доступа к gh-pages ветке
 
-      - name: Setup Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
@@ -23,11 +23,13 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build site (production mode)
-        run: MODE=production npx gulp --gulpfile gulpfile.js/index.js --cwd . --production
+      - name: Build project
+        run: npx gulp docs
 
-      - name: Deploy to GitHub Pages
+      - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./public
+          publish_dir: ./docs
+          publish_branch: gh-pages
+          force_orphan: true  # перезаписывает ветку полностью, без истории
