@@ -5,7 +5,7 @@ const replace = require("gulp-replace");
 const fileInclude = require("gulp-file-include");
 const htmlclean = require("gulp-htmlclean");
 const webpHTML = require("gulp-webp-retina-html");
-const typograf = require('gulp-typograf');
+const typograf = require("gulp-typograf");
 
 // SASS
 const sass = require("gulp-sass")(require("sass"));
@@ -29,13 +29,12 @@ const changed = require("gulp-changed");
 const imagemin = require("gulp-imagemin");
 const imageminWebp = require("imagemin-webp");
 const extReplace = require("gulp-ext-replace");
-const merge = require('merge-stream');
-
+const merge = require("merge-stream");
 
 // SVG
 const svgsprite = require("gulp-svg-sprite");
 
-const rename = require('gulp-rename'); 
+const rename = require("gulp-rename");
 
 gulp.task("clean:docs", function (done) {
   if (fs.existsSync("./docs/")) {
@@ -122,34 +121,25 @@ gulp.task("sass:docs", function () {
     .pipe(gulp.dest("./docs/css/"));
 });
 
-gulp.task("images:docs", function () {
-  // Сначала WebP
-  const webpStream = gulp
-    .src(["./src/img/**/*.{png,jpg,jpeg}", "!./src/img/svgicons/**/*"])
-    .pipe(changed("./docs/img/", { extension: '.webp' }))
-    .pipe(
-      imagemin([
-        imageminWebp({ quality: 85 }),
-      ])
-    )
-    .pipe(extReplace(".webp"))
-    .pipe(gulp.dest("./docs/img/"));
-
-  // Потом остальные изображения
-  const otherImagesStream = gulp
-    .src(["./src/img/**/*", "!./src/img/svgicons/**/*", "!./src/img/**/*.{png,jpg,jpeg}"])
-    .pipe(changed("./docs/img/"))
-    .pipe(
-      imagemin([
-        imagemin.gifsicle({ interlaced: true }),
-        imagemin.mozjpeg({ quality: 85, progressive: true }),
-        imagemin.optipng({ optimizationLevel: 5 }),
-      ], { verbose: true })
-    )
-    .pipe(gulp.dest("./docs/img/"));
-
-  return merge(webpStream, otherImagesStream);
+gulp.task('images:docs:copy', function () {
+  return gulp
+    .src(['./src/img/**/*', '!./src/img/svgicons/**/*'])
+    .pipe(changed('./docs/img/'))
+    .pipe(gulp.dest('./docs/img/'));
 });
+
+
+gulp.task('images:docs:webp', function () {
+  return gulp
+    .src(['./src/img/**/*.{jpg,jpeg,png,gif}'])
+    .pipe(changed('./docs/img/', { extension: '.webp' }))
+    .pipe(imagemin([imageminWebp({ quality: 85 })]))
+    .pipe(rename({ extname: '.webp' }))
+    .pipe(gulp.dest('./docs/img/'));
+});
+
+
+gulp.task('images:docs', gulp.series('images:docs:copy', 'images:docs:webp'));
 
 const svgStack = {
   mode: {

@@ -15,9 +15,10 @@ const changed = require("gulp-changed");
 //const typograf = require('gulp-typograf');
 const svgsprite = require("gulp-svg-sprite");
 const replace = require("gulp-replace");
-const webImagesCSS = require('gulp-web-images-css');
+const webImagesCSS = require("gulp-web-images-css");
 const csso = require("gulp-csso");
-const rename = require('gulp-rename'); 
+const rename = require("gulp-rename");
+const imageminWebp = require("imagemin-webp");
 
 gulp.task("clean:dev", function (done) {
   if (fs.existsSync("./build/")) {
@@ -95,15 +96,23 @@ gulp.task("sass:dev", function () {
     .pipe(gulp.dest("./build/css/"));
 });
 
-gulp.task("images:dev", function () {
-  return (
-    gulp
-      .src(["./src/img/**/*", "!./src/img/svgicons/**/*"])
-      .pipe(changed("./build/img/"))
-      // .pipe(imagemin({ verbose: true }))
-      .pipe(gulp.dest("./build/img/"))
-  );
+gulp.task("images:copy", function () {
+  return gulp
+    .src(["./src/img/**/*", "!./src/img/svgicons/**/*"])
+    .pipe(changed("./build/img/"))
+    .pipe(gulp.dest("./build/img/"));
 });
+
+gulp.task("images:webp", function () {
+  return gulp
+    .src(["./src/img/**/*.{jpg,jpeg,png,gif}"])
+    .pipe(changed("./build/img/", { extension: ".webp" }))
+    .pipe(imagemin([imageminWebp({ quality: 85 })]))
+    .pipe(rename({ extname: ".webp" }))
+    .pipe(gulp.dest("./build/img/"));
+});
+
+gulp.task("images:dev", gulp.series("images:copy", "images:webp"));
 
 const svgStack = {
   mode: {
