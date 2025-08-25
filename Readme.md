@@ -48,7 +48,7 @@ npm install --save-dev gulp gulp-sass sass gulp-file-include gulp-clean gulp-ser
 
 ---
 
-## 4. Работа с SCSS: новые правила подключения (*Изменения Август 2025*)
+## 4. Работа с SCSS: новые правила подключения (***Изменения Август 2025***)
 
 ### Структура SCSS
 
