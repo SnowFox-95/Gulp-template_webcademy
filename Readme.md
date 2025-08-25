@@ -48,7 +48,86 @@ npm install --save-dev gulp gulp-sass sass gulp-file-include gulp-clean gulp-ser
 
 ---
 
-## 4. Автоматический деплой на Github Pages
+## 4. Работа с SCSS: новые правила подключения
+
+### Структура SCSS
+
+- Все базовые переменные, миксины и утилиты экспортируются через файл `src/scss/base/_index.scss` с помощью `@forward`.
+- Все блоки экспортируются через файл `src/scss/blocks/_index.scss` с помощью `@forward`.
+
+### Подключение в main.scss
+
+Вместо устаревших `@import` используйте:
+
+```scss
+@use 'base/index' as base;
+@use 'blocks/index' as blocks;
+```
+
+### Использование переменных и миксинов
+
+- Для обращения к переменным и миксинам используйте namespace:
+    - Переменные: `base.$имя_переменной`
+    - Миксины: `@include base.имя_миксина`
+- Пример:
+    ```scss
+    @use 'base/index' as base;
+
+    .example {
+      color: base.$primary-color;
+      @include base.flex-center;
+    }
+    ```
+
+### Внутри блоков
+
+- Если в блоке используются базовые миксины или переменные, подключайте их через:
+    ```scss
+    @use '../base/index' as base;
+    ```
+
+### Медиа-запросы
+
+- Для размеров используйте SCSS-переменные из `base/vars`:
+    ```scss
+    @use '../base/vars' as vars;
+
+    @media (max-width: vars.$laptop-size) { ... }
+    ```
+
+### Важно
+
+- Не используйте `@import` — только `@use` и `@forward`.
+- Все обращения к SCSS-сущностям — только через namespace.
+
+---
+
+**Пример полного подключения:**
+
+```scss
+@use 'base/index' as base;
+@use 'blocks/index' as blocks;
+```
+
+**Пример внутри блока:**
+
+```scss
+@use '../base/index' as base;
+
+.block {
+  @include base.mobile {
+    // ...
+  }
+}
+```
+
+---
+
+**Если используете только CSS custom properties (var(--...)), подключать SCSS-файлы не требуется.**
+
+---
+
+## 5. Автоматический деплой на Github Pages
 
 При пуше в ветку `main`:
 
@@ -58,7 +137,7 @@ npm install --save-dev gulp gulp-sass sass gulp-file-include gulp-clean gulp-ser
 
 ---
 
-## 5. Настройка Github actions
+## 6. Настройка Github actions
 
 В репозитории должен быть workflow-файл `.github/workflows/deploy.yml` c таким содержанием
 
@@ -104,12 +183,12 @@ jobs:
 
 ```
 ---
-## 6. Важные моменты
+## 7. Важные моменты
 1. Для успешного деплоя нужно убедиться, что в настройках репозитория **включены**:
     - разрешения `contents: write` для GitHub Actions (проверка через *Settings* -> *Actions* -> *General* -> *Workflow permissions*)
 2. После первого успешного деплоя необходимо в разделе Settings -> Pages указать ветку `gh-pages` и папку `/(root)`для публикации сайта
 ---
-## 7. Рекомендации и советы
+## 8. Рекомендации и советы
 
 - Все пути в gulp настроены так, что исходники лежат в `./src`, дев-сборка — в `./build`, продакшен сборка — в `./docs`
 
@@ -127,12 +206,12 @@ jobs:
 
 - Запуск сборок лучше делать через задачи в редакторе, это удобнее и снижает ошибки при копировании команд
 ---
-## 8. Лицензия 
+## 9. Лицензия 
 
 **MIT License**
 
 ---
 
-## 9. Контакты  и помощь
+## 10. Контакты  и помощь
 
 Если возникли вопросы, пожалуйста, обращайтесь к документации Gulp, GitHub Actions или напишите в issue репозитория.
