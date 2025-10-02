@@ -1,13 +1,10 @@
 /* Nav Icon */
 .mobile-nav-btn {
 	--time: 0.1s;
-
 	--width: 40px;
 	--height: 30px;
-
 	--line-height: 4px;
 	--spacing: 6px;
-
 	--color: #000;
 	--radius: 4px;
 
@@ -18,7 +15,6 @@
 	/* Dynamic height and width */
 	height: calc(var(--line-height) * 3 + var(--spacing) * 2);
 	width: var(--width);
-
 	display: flex;
 	justify-content: center;
 	align-items: center;

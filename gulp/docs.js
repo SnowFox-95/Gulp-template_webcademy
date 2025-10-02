@@ -9,11 +9,9 @@ const typograf = require("gulp-typograf");
 
 // SASS
 const sass = require("gulp-sass")(require("sass"));
-const sassGlob = require("gulp-sass-glob");
 const autoprefixer = require("gulp-autoprefixer");
 const csso = require("gulp-csso");
 const webImagesCSS = require("gulp-web-images-css"); //Вывод WEBP-изображений
-
 const server = require("gulp-server-livereload");
 const clean = require("gulp-clean");
 const fs = require("fs");
@@ -95,12 +93,11 @@ gulp.task("html:docs", function () {
 
 gulp.task("sass:docs", function () {
   return gulp
-    .src("./src/scss/*.scss")
+    .src("./src/scss/main.scss")
     .pipe(changed("./docs/css/"))
     .pipe(plumber(plumberNotify("SCSS")))
     .pipe(sourceMaps.init())
     .pipe(autoprefixer())
-    .pipe(sassGlob())
     .pipe(groupMedia())
     .pipe(sass())
     .pipe(
@@ -114,32 +111,30 @@ gulp.task("sass:docs", function () {
         "$1$2$3$4$6$1"
       )
     )
-    .pipe(gulp.dest(".build/css/"))
+    .pipe(gulp.dest("./docs/css/"))
     .pipe(csso())
     .pipe(rename({ suffix: ".min" }))
     .pipe(sourceMaps.write("."))
     .pipe(gulp.dest("./docs/css/"));
 });
 
-gulp.task('images:docs:copy', function () {
+gulp.task("images:docs:copy", function () {
   return gulp
-    .src(['./src/img/**/*', '!./src/img/svgicons/**/*'])
-    .pipe(changed('./docs/img/'))
-    .pipe(gulp.dest('./docs/img/'));
+    .src(["./src/img/**/*", "!./src/img/svgicons/**/*"])
+    .pipe(changed("./docs/img/"))
+    .pipe(gulp.dest("./docs/img/"));
 });
 
-
-gulp.task('images:docs:webp', function () {
+gulp.task("images:docs:webp", function () {
   return gulp
-    .src(['./src/img/**/*.{jpg,jpeg,png,gif}'])
-    .pipe(changed('./docs/img/', { extension: '.webp' }))
+    .src(["./src/img/**/*.{jpg,jpeg,png,gif}"])
+    .pipe(changed("./docs/img/", { extension: ".webp" }))
     .pipe(imagemin([imageminWebp({ quality: 85 })]))
-    .pipe(rename({ extname: '.webp' }))
-    .pipe(gulp.dest('./docs/img/'));
+    .pipe(rename({ extname: ".webp" }))
+    .pipe(gulp.dest("./docs/img/"));
 });
 
-
-gulp.task('images:docs', gulp.series('images:docs:copy', 'images:docs:webp'));
+gulp.task("images:docs", gulp.series("images:docs:copy", "images:docs:webp"));
 
 const svgStack = {
   mode: {

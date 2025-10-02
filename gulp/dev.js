@@ -1,7 +1,6 @@
 const gulp = require("gulp");
 const fileInclude = require("gulp-file-include");
 const sass = require("gulp-sass")(require("sass"));
-const sassGlob = require("gulp-sass-glob");
 const server = require("gulp-server-livereload");
 const clean = require("gulp-clean");
 const fs = require("fs");
@@ -71,11 +70,11 @@ gulp.task("html:dev", function () {
 
 gulp.task("sass:dev", function () {
   return gulp
-    .src("./src/scss/*.scss")
+    .src("./src/scss/main.scss")
     .pipe(changed("./build/css/"))
     .pipe(plumber(plumberNotify("SCSS")))
     .pipe(sourceMaps.init())
-    .pipe(sassGlob())
+    
     .pipe(sass())
     .pipe(
       webImagesCSS({
