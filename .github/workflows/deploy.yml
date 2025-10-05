@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      
+
 permissions:
   contents: write
 
@@ -28,6 +28,9 @@ jobs:
 
       - name: Build project
         run: npx gulp docs
+
+      - name: List docs folder
+        run: ls -R ./docs
 
       - name: Deploy to gh-pages branch
         uses: peaceiris/actions-gh-pages@v4
