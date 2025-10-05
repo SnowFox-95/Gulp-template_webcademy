@@ -16,7 +16,7 @@ const server = require("gulp-server-livereload");
 const clean = require("gulp-clean");
 const fs = require("fs");
 const sourceMaps = require("gulp-sourcemaps");
-const groupMedia = require("gulp-group-css-media-queries");
+
 const plumber = require("gulp-plumber");
 const notify = require("gulp-notify");
 const webpack = require("webpack-stream");
@@ -98,7 +98,6 @@ gulp.task("sass:docs", function () {
     .pipe(plumber(plumberNotify("SCSS")))
     .pipe(sourceMaps.init())
     .pipe(autoprefixer())
-    .pipe(groupMedia())
     .pipe(sass())
     .pipe(
       webImagesCSS({
