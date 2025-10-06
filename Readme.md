@@ -1,5 +1,11 @@
 # Сборка Gulp + Автодеплой на Gh-pages
 
+<img src="https://img.shields.io/badge/version-2.0.0-blue"> <img src="https://img.shields.io/badge/last update-06.10.25-aqua">
+
+## Что это?
+
+Это сборка Gulp основанная на одном из уроков по верстке с препроцессором Gulp от WebAcademy. Сборка обновлена в соответствии современными представлениями scss (отказ от `@import` в пользу `@use` и `@forward`). Также настроен автодеплой с публикацией в отдельную ветку `gh-pages`.
+
 ## 1. Установка зависимостей
 
 Чтобы все заработало надо выполнить команду в терминале среды разработки
@@ -48,7 +54,7 @@ npm install --save-dev gulp gulp-sass sass gulp-file-include gulp-clean gulp-ser
 
 ---
 
-## 4. Работа с SCSS: новые правила подключения (***Изменения Август 2025***)
+## 4. Работа с SCSS: новые правила подключения (**_Изменения Август 2025_**)
 
 ### Структура SCSS
 
@@ -60,40 +66,42 @@ npm install --save-dev gulp gulp-sass sass gulp-file-include gulp-clean gulp-ser
 Вместо устаревших `@import` используйте:
 
 ```scss
-@use 'base/index' as base;
-@use 'blocks/index' as blocks;
+@use "base/index" as base;
+@use "blocks/index" as blocks;
 ```
 
 ### Использование переменных и миксинов
 
 - Для обращения к переменным и миксинам используйте namespace:
-    - Переменные: `base.$имя_переменной`
-    - Миксины: `@include base.имя_миксина`
+  - Переменные: `base.$имя_переменной`
+  - Миксины: `@include base.имя_миксина`
 - Пример:
-    ```scss
-    @use 'base/index' as base;
 
-    .example {
-      color: base.$primary-color;
-      @include base.flex-center;
-    }
-    ```
+  ```scss
+  @use "base/index" as base;
+
+  .example {
+    color: base.$primary-color;
+    @include base.flex-center;
+  }
+  ```
 
 ### Внутри блоков
 
 - Если в блоке используются базовые миксины или переменные, подключайте их через:
-    ```scss
-    @use '../base/index' as base;
-    ```
+  ```scss
+  @use "../base/index" as base;
+  ```
 
 ### Медиа-запросы
 
 - Для размеров используйте SCSS-переменные из `base/vars`:
-    ```scss
-    @use '../base/vars' as vars;
 
-    @media (max-width: vars.$laptop-size) { ... }
-    ```
+  ```scss
+  @use '../base/vars' as vars;
+
+  @media (max-width: vars.$laptop-size) { ... }
+  ```
 
 ### Важно
 
@@ -105,14 +113,14 @@ npm install --save-dev gulp gulp-sass sass gulp-file-include gulp-clean gulp-ser
 **Пример полного подключения:**
 
 ```scss
-@use 'base/index' as base;
-@use 'blocks/index' as blocks;
+@use "base/index" as base;
+@use "blocks/index" as blocks;
 ```
 
 **Пример внутри блока:**
 
 ```scss
-@use '../base/index' as base;
+@use "../base/index" as base;
 
 .block {
   @include base.mobile {
@@ -139,7 +147,7 @@ npm install --save-dev gulp gulp-sass sass gulp-file-include gulp-clean gulp-ser
 
 ## 6. Настройка Github actions
 
-В репозитории должен быть workflow-файл `.github/workflows/deploy.yml` c таким содержанием
+В репозитории должен быть workflow-файл `.github/workflows/deploy.yml` c таким минимальным содержанием
 
 ```yml
 name: Deploy to GitHub Pages
@@ -165,7 +173,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install dependencies
         run: npm ci
@@ -180,14 +188,18 @@ jobs:
           publish_dir: ./docs
           publish_branch: gh-pages
           force_orphan: true
-
 ```
+
 ---
+
 ## 7. Важные моменты
+
 1. Для успешного деплоя нужно убедиться, что в настройках репозитория **включены**:
-    - разрешения `contents: write` для GitHub Actions (проверка через *Settings* -> *Actions* -> *General* -> *Workflow permissions*)
+   - разрешения `contents: write` для GitHub Actions (проверка через _Settings_ -> _Actions_ -> _General_ -> _Workflow permissions_)
 2. После первого успешного деплоя необходимо в разделе Settings -> Pages указать ветку `gh-pages` и папку `/(root)`для публикации сайта
+
 ---
+
 ## 8. Рекомендации и советы
 
 - Все пути в gulp настроены так, что исходники лежат в `./src`, дев-сборка — в `./build`, продакшен сборка — в `./docs`
@@ -202,16 +214,18 @@ jobs:
 
 - Для конвертации изображений в WebP используется `imagemin-webp`, обратите внимание на корректность настроек и порядка задач
 
-- Ошибки при деплое чаще всего связаны с правами доступа: проверьте, что в настройках *Actions* репозитория у вас выставлены разрешения **"Read and write permissions"**
+- Ошибки при деплое чаще всего связаны с правами доступа: проверьте, что в настройках _Actions_ репозитория у вас выставлены разрешения **"Read and write permissions"**
 
 - Запуск сборок лучше делать через задачи в редакторе, это удобнее и снижает ошибки при копировании команд
+
 ---
-## 9. Лицензия 
+
+## 9. Лицензия
 
 **MIT License**
 
 ---
 
-## 10. Контакты  и помощь
+## 10. Контакты и помощь
 
 Если возникли вопросы, пожалуйста, обращайтесь к документации Gulp, GitHub Actions или напишите в issue репозитория.
